@@ -10,7 +10,7 @@ mergeSortButton = document.getElementById("mergesort");
 quickSortButton = document.getElementById("quicksort");
 
 // 1000ms / 60 = 17ms, should render every frame on 60fps display
-let SLEEPTIME= 17;
+let SLEEPTIME = 17;
 
 function handleNumberChange(e) {
 	let el = e.target
@@ -331,18 +331,19 @@ async function mergeSort() {
 }
 
 async function quickSortSplit(arr, wholeArray, start) {
-	console.log("start", start)
-	const pivot = arr[0];
+	const pivotIndex = Math.floor(Math.random() * arr.length)
+	const pivot = arr[pivotIndex];
 	const less = [];
 	const more = [];
 
-	for (let i = 1; i < arr.length; i++) {
+	for (let i = 0; i < arr.length; i++) {
+		if (i === pivotIndex) continue;
 		if (arr[i] < pivot) {
 			less.push(arr[i])
 		} else {
 			more.push(arr[i])
 		}
-		renderFlatArray(wholeArray, { active: [start + i, start] })
+		renderFlatArray(wholeArray, { active: [start + i, start + pivotIndex] })
 		await sleep(SLEEPTIME);
 	}
 
@@ -357,10 +358,10 @@ async function quickSortSplit(arr, wholeArray, start) {
 	const lessLen = less.length;
 	const moreLen = more.length;
 	if (less.length) await quickSortSplit(less, wholeArray, start);
-	renderFlatArray(wholeArray, {active: arrayRange(start, lessLen)})
+	renderFlatArray(wholeArray, { active: arrayRange(start, lessLen) })
 	await sleep(SLEEPTIME);
 	if (more.length) await quickSortSplit(more, wholeArray, start + lessLen + 1);
-	renderFlatArray(wholeArray, {active: arrayRange(start, moreLen)})
+	renderFlatArray(wholeArray, { active: arrayRange(start, moreLen) })
 	await sleep(SLEEPTIME);
 }
 
