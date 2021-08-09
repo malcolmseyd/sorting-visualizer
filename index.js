@@ -1,5 +1,3 @@
-console.log("Script loads :)");
-
 inputNumbers = document.getElementById("inputnumbers");
 sortingArray = document.getElementById("sortingarray");
 shuffleButton = document.getElementById("shuffle");
@@ -22,13 +20,7 @@ function handleNumberChange(e) {
 
 	value = parseInt(el.value);
 
-	if (isNaN(value)) {
-		console.log("INVALID INPUT", e.data, e)
-		el.value = 0
-		return
-	}
-
-	el.lastValue = el.value;
+	el.oldValue = el.value;
 	resizeArray(value)
 }
 
@@ -240,9 +232,7 @@ async function mergeArray(arr, wholeArray, start) {
 	const [left, right] = arr;
 	const sortedArr = [];
 
-	console.log("Merging left, starting at", start)
 	await mergeArray(left, wholeArray, start);
-	console.log("Merging right, starting at", start + left.length);
 	await mergeArray(right, wholeArray, start + left.length);
 
 	// copy least values from each array into new one
@@ -319,9 +309,6 @@ async function mergeSort() {
 	let array = getArray();
 
 	const split = splitArray(array)
-	console.log(split)
-	console.log(split.flat(Infinity))
-	console.log(recursiveListPrint(split))
 
 	await mergeArray(split, split, 0);
 	array = split;
@@ -369,9 +356,7 @@ async function quickSort() {
 	let array = getArray();
 
 	await quickSortSplit(array, array, 0);
-	console.log("after splitting", array)
 	array = array.flat(Infinity);
-	console.log("flattened", array);
 
 	renderArray(array);
 	setArray(array);
