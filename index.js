@@ -9,7 +9,8 @@ insertionSortButton = document.getElementById("insertionsort");
 mergeSortButton = document.getElementById("mergesort");
 quickSortButton = document.getElementById("quicksort");
 
-let SLEEPTIME = 1;
+// 1000ms / 60 = 17ms, should render every frame on 60fps display
+let SLEEPTIME= 17;
 
 function handleNumberChange(e) {
 	let el = e.target
