@@ -7,6 +7,7 @@ bubbleSortButton = document.getElementById("bubblesort");
 selectionSortButton = document.getElementById("selectionsort");
 insertionSortButton = document.getElementById("insertionsort");
 mergeSortButton = document.getElementById("mergesort");
+quickSortButton = document.getElementById("quicksort");
 
 let SLEEPTIME = 1;
 
@@ -71,6 +72,14 @@ async function mergeSortArray() {
 	sortingArray.locked = false;
 }
 mergeSortButton.onclick = mergeSortArray
+
+async function quickSortArray() {
+	if (sortingArray.locked) return;
+	sortingArray.locked = true;
+	await quickSort();
+	sortingArray.locked = false;
+}
+quickSortButton.onclick = quickSortArray
 
 function arrayRangeTo(n) {
 	arrayRange(1, n);
@@ -320,3 +329,48 @@ async function mergeSort() {
 	setArray(array);
 }
 
+async function quickSortSplit(arr, wholeArray, start) {
+	console.log("start", start)
+	const pivot = arr[0];
+	const less = [];
+	const more = [];
+
+	for (let i = 1; i < arr.length; i++) {
+		if (arr[i] < pivot) {
+			less.push(arr[i])
+		} else {
+			more.push(arr[i])
+		}
+		renderFlatArray(wholeArray, { active: [start + i, start] })
+		await sleep(SLEEPTIME);
+	}
+
+	while (arr.length) {
+		arr.pop();
+	}
+
+	arr.push(less);
+	arr.push(pivot);
+	arr.push(more);
+
+	const lessLen = less.length;
+	const moreLen = more.length;
+	if (less.length) await quickSortSplit(less, wholeArray, start);
+	renderFlatArray(wholeArray, {active: arrayRange(start, lessLen)})
+	await sleep(SLEEPTIME);
+	if (more.length) await quickSortSplit(more, wholeArray, start + lessLen + 1);
+	renderFlatArray(wholeArray, {active: arrayRange(start, moreLen)})
+	await sleep(SLEEPTIME);
+}
+
+async function quickSort() {
+	let array = getArray();
+
+	await quickSortSplit(array, array, 0);
+	console.log("after splitting", array)
+	array = array.flat(Infinity);
+	console.log("flattened", array);
+
+	renderArray(array);
+	setArray(array);
+}
